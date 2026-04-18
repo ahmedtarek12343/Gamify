@@ -5,10 +5,13 @@ export interface Game {
   description: string;
   website: string;
   rating: number;
-  released: boolean;
+  released: string;
   id: number;
   createdAt: string;
   updatedAt: string;
+  genres: Genre[];
+  tags: Tag[];
+  dominant_color: string;
 }
 
 export interface Order {
@@ -36,4 +39,21 @@ export interface Platform {
   slug: string;
   image_background: string;
   platforms: Platform[];
+  games_count: number;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+  slug: string;
+  games_count: number;
+  image_background: string;
+}
+
+export interface Tag {
+  id: number;
+  name: string;
+  slug: string;
+  games_count: number;
+  image_background: string;
 }

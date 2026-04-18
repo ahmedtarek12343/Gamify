@@ -3,10 +3,11 @@ import { useGetParentPlatforms } from "@/hooks/games/useGetParentTags";
 import Link from "next/link";
 import { Platform } from "@/types";
 import { Badge } from "../ui/badge";
+import { useGameFilterStore } from "@/store/game.store";
 
 const ParentTags = () => {
   const { data, isLoading, isError } = useGetParentPlatforms();
-  console.log(data);
+  const { setParentPlatforms } = useGameFilterStore();
   return (
     <div className="py-10 border px-4 mt-5 rounded-lg">
       <h2 className="text-lg font-bold mb-5 text-center">
@@ -22,7 +23,10 @@ const ParentTags = () => {
         {data?.results.slice(0, 10).map((tag: Platform) => (
           <Link
             key={tag.id}
-            href={`/platform/${tag.id}`}
+            href={`/games`}
+            onClick={() => {
+              setParentPlatforms(tag.id.toString());
+            }}
             className={buttonVariants({ variant: "outline" })}
           >
             <p>{tag.name}</p>

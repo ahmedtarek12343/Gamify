@@ -3,15 +3,11 @@ import Link from "next/link";
 import { UserButton, Show, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "../utils/ThemeToggle";
-import { useGameFilterStore } from "@/store/game.store";
-import { Input } from "../ui/input";
-import ResponsiveModal from "../utils/ResponsiveModal";
 import { useState } from "react";
 import { ShoppingCartIcon } from "lucide-react";
 import ResponsiveSheet from "../utils/ResponsiveSheet";
 
 const Header = () => {
-  const { setSearch, search } = useGameFilterStore();
   const [open, setOpen] = useState(false);
   return (
     <header className="h-16">
@@ -25,20 +21,14 @@ const Header = () => {
               <Link href="/">Home</Link>
             </li>
             <li>
-              <Link href="/about">About</Link>
+              <Link href="/games">Games</Link>
             </li>
             <li>
-              <Link href="/contact">Contact</Link>
+              <Link href="/wishlist">Wishlist</Link>
             </li>
           </ul>
         </nav>
         <div className="flex items-center gap-2">
-          {" "}
-          <Input
-            placeholder="Search"
-            onChange={(e) => setSearch(e.target.value)}
-            value={search}
-          />
           <Show when="signed-out">
             <SignInButton mode="modal">
               <Button>Sign In</Button>

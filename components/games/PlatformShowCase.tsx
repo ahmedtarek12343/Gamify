@@ -38,27 +38,28 @@ const PlatformShowCase = ({ id }: { id: string }) => {
           <span>{platform.platforms.length}</span>
         </Badge>
       </div>
-
-      {platform?.platforms.map((platform: Platform) => (
-        <Fragment key={platform.id}>
-          <div
-            onClick={() => {
-              setPlatforms(platform.id.toString());
-              setParentPlatforms(id);
-              router.push(`/games`);
-            }}
-            className={buttonVariants({ variant: "outline" })}
-          >
-            <p>{platform.name}</p>
-          </div>{" "}
-          <Image
-            src={platform.image_background}
-            alt={platform.name}
-            width={200}
-            height={200}
-          />
-        </Fragment>
-      ))}
+      <div className="grid grid-cols-4 gap-4">
+        {platform?.platforms.map((platform: Platform) => (
+          <div key={platform.id}>
+            <div
+              onClick={() => {
+                setPlatforms(platform.id.toString());
+                setParentPlatforms(id);
+                router.push(`/games`);
+              }}
+              className={buttonVariants({ variant: "outline" })}
+            >
+              <p>{platform.name}</p>
+            </div>{" "}
+            <Image
+              src={platform.image_background}
+              alt={platform.name}
+              width={200}
+              height={200}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

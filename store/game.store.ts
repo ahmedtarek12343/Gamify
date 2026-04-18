@@ -7,9 +7,13 @@ interface GameFilterStore {
   setSearch: (search: string) => void;
   setPage: (page: number) => void;
   selectedPlatform: string[];
+  ordering: string;
+  setOrdering: (ordering: string) => void;
   setPlatforms: (platform: string) => void;
   selectedTags: string[];
   setTags: (tag: string) => void;
+  selectedGenres: string[];
+  setGenres: (genre: string) => void;
   selectedParentPlatform: string;
   setParentPlatforms: (platform: string) => void;
   clearFilters: () => void;
@@ -25,6 +29,8 @@ export const useGameFilterStore = create<GameFilterStore>()(
     selectedPlatform: [],
     selectedParentPlatform: "",
     selectedTags: [],
+    selectedGenres: [],
+    ordering: "",
     setSearch: (search: string) => set({ search }),
     setPage: (page: number) => set({ page }),
     setPlatforms: (platform: string) =>
@@ -38,12 +44,28 @@ export const useGameFilterStore = create<GameFilterStore>()(
         }
         state.page = 1;
       }),
+    setOrdering: (ordering: string) =>
+      set((state) => {
+        state.ordering = ordering;
+        state.page = 1;
+      }),
     setTags: (tag: string) =>
       set((state) => {
         if (state.selectedTags.includes(tag)) {
           state.selectedTags = state.selectedTags.filter((t) => t !== tag);
         } else {
           state.selectedTags.push(tag);
+        }
+        state.page = 1;
+      }),
+    setGenres: (genre: string) =>
+      set((state) => {
+        if (state.selectedGenres.includes(genre)) {
+          state.selectedGenres = state.selectedGenres.filter(
+            (g) => g !== genre,
+          );
+        } else {
+          state.selectedGenres.push(genre);
         }
         state.page = 1;
       }),
@@ -57,8 +79,10 @@ export const useGameFilterStore = create<GameFilterStore>()(
         selectedPlatform: [],
         selectedParentPlatform: "",
         selectedTags: [],
+        selectedGenres: [],
         page: 1,
         search: "",
+        ordering: "",
       }),
     clearParentPlatformFilters: () =>
       set({

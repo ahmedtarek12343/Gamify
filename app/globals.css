@@ -154,3 +154,31 @@
   width: 20px !important;
   border-radius: 40px !important;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE + Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-track::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.no-track::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.no-track::-webkit-scrollbar-button {
+  background-color: transparent;
+}
+
+.no-track::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 50px;
+  transition: all 0.3s ease-in-out;
+}

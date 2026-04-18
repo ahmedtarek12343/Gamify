@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ClerkLoaded, ClerkLoading, ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "sonner";
-import { Loader2 } from "lucide-react";
+import AuthLoading from "@/components/loading/AuthLoading";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({
@@ -31,7 +31,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
           <ClerkLoaded>{children}</ClerkLoaded>
           <ClerkLoading>
             <div className="flex items-center justify-center h-screen">
-              <Loader2 className="animate-spin" />
+              <AuthLoading />
             </div>
           </ClerkLoading>
           <Toaster position="bottom-right" richColors />

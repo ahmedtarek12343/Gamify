@@ -75,7 +75,7 @@ const HeroSection = () => {
             key={game.id}
             className="relative cursor-pointer"
             onClick={() => {
-              router.push(`/game/${game.slug}`);
+              router.push(`/games/${game.slug}`);
             }}
           >
             <div
@@ -94,8 +94,10 @@ const HeroSection = () => {
             </div>
 
             <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/40 to-transparent" />
-            <div className="absolute bottom-10 left-20 z-10">
-              <h1 className="hero-title text-4xl font-bold">{game.name}</h1>
+            <div className="absolute bottom-10 left-5 md:left-20 z-10">
+              <h1 className="hero-title text-xl md:text-4xl font-bold">
+                {game.name}
+              </h1>
             </div>
           </SwiperSlide>
         ))}

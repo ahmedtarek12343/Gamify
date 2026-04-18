@@ -9,9 +9,29 @@ export const useGetGames = (
   platforms?: string[],
   tags?: string[],
   parentPlatforms?: string,
+  genres?: string[],
+  ordering?: string,
 ) => {
   return useQuery({
-    queryKey: ["games", search, page, platforms, tags, parentPlatforms],
-    queryFn: () => getGames(search, page, platforms, tags, parentPlatforms),
+    queryKey: [
+      "games",
+      search,
+      page,
+      platforms,
+      tags,
+      parentPlatforms,
+      genres,
+      ordering,
+    ],
+    queryFn: () =>
+      getGames(
+        search,
+        page,
+        platforms,
+        tags,
+        parentPlatforms,
+        genres,
+        ordering,
+      ),
   });
 };

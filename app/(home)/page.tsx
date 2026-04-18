@@ -1,4 +1,5 @@
 "use client";
+import TrendingGames from "@/components/games/TrendingGames";
 import HeroSection from "@/components/home/HeroSection";
 import ParentTags from "@/components/home/ParentTags";
 
@@ -7,6 +8,7 @@ const page = () => {
     <div>
       <HeroSection />
       <ParentTags />
+      <TrendingGames />
     </div>
   );
 };

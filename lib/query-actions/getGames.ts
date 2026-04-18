@@ -5,6 +5,8 @@ export const getGames = async (
   platforms?: string[],
   tags?: string[],
   parentPlatforms?: string,
+  genres?: string[],
+  ordering?: string,
 ) => {
   const params = new URLSearchParams({
     key: process.env.RAWG_API_KEY!,
@@ -15,6 +17,8 @@ export const getGames = async (
   if (platforms?.length) params.append("platforms", platforms.join(","));
   if (tags?.length) params.append("tags", tags.join(","));
   if (parentPlatforms) params.append("parent_platforms", parentPlatforms);
+  if (genres?.length) params.append("genres", genres.join(","));
+  if (ordering) params.append("ordering", ordering);
 
   const res = await fetch(`https://api.rawg.io/api/games?${params.toString()}`);
 
