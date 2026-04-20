@@ -25,13 +25,31 @@ export const getGame = async (id: string) => {
   ]);
   const [game, screenshots, additions, series, achievements, movies, reddit] =
     await Promise.all(res.map((r) => r.json()));
+
+  let trailers = movies;
+  if (!movies.results?.length) {
+    const ytRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(game.name + " official trailer")}&type=video&maxResults=3&key=${process.env.YOUTUBE_API_KEY}`,
+    );
+    const ytData = await ytRes.json();
+    trailers = {
+      results:
+        ytData.items?.map((item: any) => ({
+          id: item.id.videoId,
+          name: item.snippet.title,
+          preview: item.snippet.thumbnails.high.url,
+          // normalized shape so GameShowcase doesn't need to change much
+          isYoutube: true,
+        })) ?? [],
+    };
+  }
   return {
     game,
     screenshots,
     additions,
     series,
     achievements,
-    movies,
+    movies: trailers,
     reddit,
   };
 };

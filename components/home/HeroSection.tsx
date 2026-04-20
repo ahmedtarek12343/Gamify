@@ -75,7 +75,7 @@ const HeroSection = () => {
             key={game.id}
             className="relative cursor-pointer"
             onClick={() => {
-              router.push(`/games/${game.slug}`);
+              router.push(`/games/${game.id}`);
             }}
           >
             <div

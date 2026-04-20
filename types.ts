@@ -11,6 +11,7 @@ export interface Game {
   updatedAt: string;
   genres: Genre[];
   tags: Tag[];
+  qty: number;
   dominant_color: string;
 }
 

@@ -19,9 +19,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "../ui/button";
+import { useCartStore } from "@/store/cart.store";
+import { toast } from "sonner";
 
 const GameShowcase = ({ id }: { id: string }) => {
   const { data, isLoading, error } = useGetGame(id);
+  const { addToCart } = useCartStore();
 
   if (isLoading) {
     return (
@@ -53,13 +57,30 @@ const GameShowcase = ({ id }: { id: string }) => {
       {/* Hero Section */}
       <div className="relative w-full h-[50vh] md:h-[70vh] md:rounded-b-3xl overflow-hidden shadow-2xl border-b border-primary/10">
         {movies.results.length > 0 ? (
-          <video
-            src={movies.results[0].data.max}
-            autoPlay
-            loop
-            muted
-            className="w-full h-full object-cover rounded-b-3xl"
-          ></video>
+          movies.results[0].isYoutube ? (
+            <div className="absolute inset-0 w-full h-full overflow-hidden rounded-b-3xl">
+              <iframe
+                src={`https://www.youtube.com/embed/${movies.results[0].id}?autoplay=1&mute=1&loop=1&playlist=${movies.results[0].id}&controls=0&showinfo=0&rel=0&modestbranding=1&vq=hd1080`}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                style={{
+                  width: "100vw",
+                  height: "56.25vw",
+                  minHeight: "100%",
+                  minWidth: "177.77vh",
+                  border: "none",
+                }}
+                allow="autoplay; encrypted-media; fullscreen"
+              />
+            </div>
+          ) : (
+            <video
+              src={movies.results[0].data.max}
+              autoPlay
+              loop
+              muted
+              className="w-full h-full object-cover rounded-b-3xl"
+            />
+          )
         ) : game.background_image ? (
           <LazyImage
             src={game.background_image}
@@ -76,9 +97,21 @@ const GameShowcase = ({ id }: { id: string }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
 
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 flex flex-col gap-4">
-          <h1 className="text-4xl md:text-6xl font-black text-foreground drop-shadow-lg">
-            {game.name}
-          </h1>
+          <div className="flex gap-4 items-center">
+            <h1 className="text-4xl md:text-6xl font-black text-foreground drop-shadow-lg">
+              {game.name}
+            </h1>
+            <Button
+              onClick={() => {
+                addToCart(game);
+                toast.success(`${game.name} added to cart`);
+              }}
+              size="lg"
+            >
+              Add to Cart
+            </Button>
+          </div>
+
           <div className="flex flex-wrap items-center gap-3">
             {game.rating > 0 && (
               <Badge
@@ -196,12 +229,21 @@ const GameShowcase = ({ id }: { id: string }) => {
                           key={movie.id}
                           className="relative w-[300px] md:w-[450px] aspect-video overflow-hidden rounded-xl shrink-0 group border border-primary/10 bg-black shadow-sm"
                         >
-                          <video
-                            src={movie.data.max || movie.data["480"]}
-                            poster={movie.preview}
-                            controls
-                            className="w-full h-full object-cover"
-                          />
+                          {movie.isYoutube ? (
+                            <iframe
+                              src={`https://www.youtube.com/embed/${movie.id}`}
+                              title={movie.name}
+                              allowFullScreen
+                              className="w-full h-full"
+                            />
+                          ) : (
+                            <video
+                              src={movie.data.max || movie.data["480"]}
+                              poster={movie.preview}
+                              controls
+                              className="w-full h-full object-cover"
+                            />
+                          )}
                         </div>
                       ))}
                     </div>

@@ -12,7 +12,7 @@ const GameCard = ({ game }: { game: Game }) => {
   return (
     <Card
       onClick={() => {
-        router.push(`/games/${game.slug}`);
+        router.push(`/games/${game.id}`);
       }}
       className="pt-0 snap-start shrink-0 basis-[300px] group overflow-hidden border bg-card text-card-foreground shadow-sm transition-all hover:shadow-md hover:border-primary/50 relative h-[360px] cursor-pointer"
     >

@@ -16,15 +16,30 @@ const Header = () => {
           <span className="text-2xl font-bold">Gamify</span>
         </div>
         <nav className="mr-auto ml-4">
-          <ul className="flex items-center gap-4">
+          <ul className="flex items-center">
             <li>
-              <Link href="/">Home</Link>
+              <Link
+                href="/"
+                className="text-primary h-16 flex items-center font-medium transition-colors border-b border-transparent hover:border-primary hover:text-primary hover:bg-accent/50 px-4"
+              >
+                Home
+              </Link>
             </li>
             <li>
-              <Link href="/games">Games</Link>
+              <Link
+                href="/games"
+                className="text-primary h-16 flex items-center font-medium transition-colors border-b border-transparent hover:border-primary hover:text-primary hover:bg-accent/50 px-4"
+              >
+                Games
+              </Link>
             </li>
             <li>
-              <Link href="/wishlist">Wishlist</Link>
+              <Link
+                href="/wishlist"
+                className="text-primary h-16 flex items-center font-medium transition-colors border-b border-transparent hover:border-primary hover:text-primary hover:bg-accent/50 px-4"
+              >
+                Wishlist
+              </Link>
             </li>
           </ul>
         </nav>

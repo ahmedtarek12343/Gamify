@@ -6,12 +6,22 @@ import { ThemeToggle } from "../utils/ThemeToggle";
 import { useGameFilterStore } from "@/store/game.store";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Search, Gamepad2, ShoppingCartIcon } from "lucide-react";
+import Image from "next/image";
+import {
+  Search,
+  Gamepad2,
+  ShoppingCartIcon,
+  TrashIcon,
+  PlusIcon,
+} from "lucide-react";
 import { useState } from "react";
 import ResponsiveSheet from "../utils/ResponsiveSheet";
+import { useCartStore } from "@/store/cart.store";
 
 const GamesHeader = () => {
   const { setSearch, search } = useGameFilterStore();
+  const { cart, removeFromCart, addToCart, getTotalPrice } = useCartStore();
+  console.log(cart);
 
   const [open, setOpen] = useState(false);
 
@@ -56,19 +66,26 @@ const GamesHeader = () => {
                 <div className="bg-muted p-4 rounded-full mb-4">
                   <ShoppingCartIcon className="size-8 opacity-50" />
                 </div>
-                <p className="font-medium text-foreground">
-                  Your cart is empty
-                </p>
-                <p className="text-sm mt-1">
-                  Looks like you haven&apos;t added any games yet.
-                </p>
-                <Button
-                  className="mt-6"
-                  variant="outline"
-                  onClick={() => setOpen(false)}
-                >
-                  Continue Browsing
-                </Button>
+                {cart.length === 0 ? (
+                  <>
+                    <p className="font-medium text-foreground">
+                      Your cart is empty
+                    </p>
+                    <p className="text-sm mt-1">
+                      Looks like you haven&apos;t added any games yet.
+                    </p>
+                    <Button
+                      className="mt-6"
+                      variant="outline"
+                      onClick={() => setOpen(false)}
+                    >
+                      Continue Browsing
+                    </Button>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <p>Total: {getTotalPrice()}</p>
               </div>
             </div>
           </ResponsiveSheet>

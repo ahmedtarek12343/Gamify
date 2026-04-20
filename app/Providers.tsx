@@ -34,7 +34,6 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
               <AuthLoading />
             </div>
           </ClerkLoading>
-          <Toaster position="bottom-right" richColors />
         </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
