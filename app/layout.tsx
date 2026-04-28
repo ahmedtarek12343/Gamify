@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Providers from "./Providers";
 import { Toaster } from "sonner";
 import { PopState } from "@/components/utils/PopState";
+import Header from "@/components/home/Header";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -43,6 +44,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
+          <Header />
           {children}
           <Toaster richColors position="bottom-right" />
           <PopState />

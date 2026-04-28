@@ -1,10 +1,11 @@
 "use client";
 import { useGetGame } from "@/hooks/games/useGetGame";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import LazyImage from "../utils/LazyImage";
 import GameCard from "./GameCard";
+import { Comment } from "../Comments/Comment";
+
 import {
   Star,
   Calendar,
@@ -16,16 +17,46 @@ import {
   Loader2,
   Link as LinkIcon,
   AlertCircle,
+  ShoppingCartIcon,
+  Trash2,
+  Heart,
 } from "lucide-react";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "../ui/button";
 import { useCartStore } from "@/store/cart.store";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { useChangeGameStatus } from "@/hooks/games/useChangeGameStatus";
+import { Status } from "@/app/generated/prisma/enums";
+import { useGetGameStatus } from "@/hooks/games/useGetGameStatus";
+import { useRef } from "react";
+import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+import { RedditShowcase } from "./RedditShowcase";
+import { AchievementsShowcase } from "./AchievementsShowcase";
+import { useToggleWishlist } from "@/hooks/wishlist/useToggleWishlist";
+import { useGetWishlistStatus } from "@/hooks/wishlist/useGetWishlistStatus";
+
+gsap.registerPlugin(SplitText);
 
 const GameShowcase = ({ id }: { id: string }) => {
   const { data, isLoading, error } = useGetGame(id);
   const { addToCart } = useCartStore();
+  const { mutate } = useChangeGameStatus();
+  const { data: gameStatus } = useGetGameStatus(id);
+  const { mutate: toggleWishlist } = useToggleWishlist();
+  const { data: wishlistStatus } = useGetWishlistStatus(id);
+  const cartIconRef = useRef<HTMLDivElement>(null);
+  const cartTextRef = useRef<HTMLParagraphElement>(null);
+  const cartText2Ref = useRef<HTMLParagraphElement>(null);
+  const cartBtnRef = useRef<HTMLButtonElement>(null);
 
   if (isLoading) {
     return (
@@ -97,18 +128,165 @@ const GameShowcase = ({ id }: { id: string }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
 
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 flex flex-col gap-4">
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center flex-wrap">
             <h1 className="text-4xl md:text-6xl font-black text-foreground drop-shadow-lg">
               {game.name}
             </h1>
             <Button
+              ref={cartBtnRef}
               onClick={() => {
                 addToCart(game);
                 toast.success(`${game.name} added to cart`);
+                const split = new SplitText(cartTextRef.current, {
+                  type: "chars",
+                });
+                gsap
+                  .timeline({
+                    onComplete: () => {
+                      gsap.delayedCall(1, () => {
+                        const resetTl = gsap.timeline();
+
+                        resetTl
+                          .to(cartIconRef.current, {
+                            x: 0,
+                            duration: 0.9,
+                            ease: "power3.inOut",
+                          })
+                          // 2. Fade old text shortly after movement starts
+                          .to(
+                            split.chars,
+                            {
+                              opacity: 1,
+                              stagger: 0.018,
+                              duration: 0.35,
+                              ease: "power2.out",
+                            },
+                            "<0.2",
+                          )
+                          // 3. Recolor button DURING transition
+                          .to(
+                            cartBtnRef.current,
+                            {
+                              backgroundColor: "#fff",
+                              color: "#000",
+                              duration: 0.35,
+                              ease: "power2.out",
+                            },
+                            "<0.2",
+                          )
+                          // 4. Show success text before motion fully ends
+                          .to(
+                            cartText2Ref.current,
+                            {
+                              opacity: 0,
+                              x: 0,
+                              duration: 0.45,
+                              ease: "back",
+                            },
+                            "<0.35",
+                          );
+                      });
+                    },
+                  })
+
+                  .to(cartIconRef.current, {
+                    x: 120,
+                    duration: 0.9,
+                    ease: "power3.inOut",
+                  })
+                  // 2. Fade old text shortly after movement starts
+                  .to(
+                    split.chars,
+                    {
+                      opacity: 0,
+                      stagger: 0.018,
+                      duration: 0.35,
+                      ease: "power2.out",
+                    },
+                    "<0.2",
+                  )
+                  // 3. Recolor button DURING transition
+                  .to(
+                    cartBtnRef.current,
+                    {
+                      backgroundColor: "#10b981",
+                      color: "#ffffff",
+                      duration: 0.35,
+                      ease: "power2.out",
+                    },
+                    "<0.2",
+                  )
+                  // 4. Show success text before motion fully ends
+                  .to(
+                    cartText2Ref.current,
+                    {
+                      opacity: 1,
+                      x: 24,
+                      duration: 0.45,
+                      ease: "back",
+                    },
+                    "<0.35",
+                  );
               }}
+              className="overflow-hidden"
               size="lg"
             >
-              Add to Cart
+              <div className="relative flex items-center gap-2">
+                <div ref={cartIconRef} className="cart-icon">
+                  <ShoppingCartIcon className="w-4 h-4" />{" "}
+                </div>
+                <p ref={cartTextRef}>Add to Cart</p>
+                <p
+                  ref={cartText2Ref}
+                  className="absolute top-1/2 left-0 -translate-x-[125px] -translate-y-1/2"
+                >
+                  Enjoy &hearts;
+                </p>
+              </div>
+            </Button>
+            <Select
+              onValueChange={(value) => {
+                try {
+                  mutate({
+                    gameId: game.id.toString(),
+                    gameName: game.name,
+                    gameImage: game.background_image,
+                    status: value as Status,
+                  });
+                } catch (error) {
+                  console.log(error);
+                }
+              }}
+              value={gameStatus?.status}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="None">None</SelectItem>
+                <SelectItem value="Playing">Playing</SelectItem>
+                <SelectItem value="Completed">Completed</SelectItem>
+                <SelectItem value="OnHold">On Hold</SelectItem>
+                <SelectItem value="Dropped">Dropped</SelectItem>
+                <SelectItem value="PlanToPlay">Plan to Play</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              onClick={() => {
+                toggleWishlist(game);
+              }}
+              className="overflow-hidden"
+              size="lg"
+            >
+              {wishlistStatus ? (
+                <>
+                  <Trash2 className="w-4 h-4" /> Remove Wishlist
+                </>
+              ) : (
+                <>
+                  <Heart className="w-4 h-4" /> Add to Wishlist
+                </>
+              )}
             </Button>
           </div>
 
@@ -315,98 +493,13 @@ const GameShowcase = ({ id }: { id: string }) => {
         {/* Sidebar */}
         <div className="flex flex-col gap-6">
           {/* Achievements */}
-          {achievements?.results?.length > 0 && (
-            <Card className="bg-card border-border/50 shadow-sm flex flex-col max-h-[600px]">
-              <CardHeader className="pb-3 border-b border-border/10 shrink-0">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-yellow-500" />
-                  Achievements
-                  <Badge variant="outline" className="ml-auto bg-background">
-                    {achievements.count || achievements.results.length}
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <div className="flex-1 overflow-y-auto no-scrollbar">
-                <CardContent className="flex flex-col gap-4 pt-4">
-                  {achievements.results.map((achievement: any) => (
-                    <div
-                      key={achievement.id}
-                      className="flex gap-3 items-center group"
-                    >
-                      <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-border/50 bg-muted flex items-center justify-center p-1">
-                        {achievement.image ? (
-                          <LazyImage
-                            src={achievement.image}
-                            alt={achievement.name}
-                            width={48}
-                            height={48}
-                            className="object-contain w-full h-full"
-                          />
-                        ) : (
-                          <Trophy className="w-6 h-6 text-muted-foreground/30" />
-                        )}
-                      </div>
-                      <div className="flex flex-col flex-1 overflow-hidden">
-                        <span className="font-semibold text-sm group-hover:text-primary transition-colors truncate">
-                          {achievement.name}
-                        </span>
-                        <span className="text-xs text-muted-foreground line-clamp-1">
-                          {achievement.description}
-                        </span>
-                      </div>
-                      {achievement.percent && (
-                        <div className="shrink-0 text-xs font-mono text-muted-foreground bg-muted px-2 py-1 rounded-md">
-                          {achievement.percent}%
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </CardContent>
-              </div>
-            </Card>
-          )}
+          <AchievementsShowcase achievements={achievements} />
 
           {/* Reddit Community */}
-          {reddit?.results?.length > 0 && (
-            <Card className="bg-card border-border/50 shadow-sm flex flex-col max-h-[600px]">
-              <CardHeader className="pb-3 border-b border-border/10 shrink-0">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5 text-orange-500" />
-                  Reddit Community
-                </CardTitle>
-              </CardHeader>
-              <div className="flex-1 overflow-y-auto no-scrollbar">
-                <CardContent className="flex flex-col gap-3 pt-4">
-                  {reddit.results.map((post: any) => (
-                    <a
-                      key={post.id}
-                      href={post.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block group"
-                    >
-                      <div className="flex flex-col gap-2 p-3 rounded-xl bg-muted/30 hover:bg-muted/80 border border-transparent hover:border-border transition-all">
-                        <span className="font-medium text-sm group-hover:text-primary line-clamp-2 leading-snug">
-                          {post.name}
-                        </span>
-                        {post.text && (
-                          <span className="text-xs text-muted-foreground line-clamp-2">
-                            {post.text}
-                          </span>
-                        )}
-                        <div className="flex items-center gap-2 mt-1">
-                          <MessageSquare className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                            {post.username || "Reddit User"}
-                          </span>
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </CardContent>
-              </div>
-            </Card>
-          )}
+          <RedditShowcase reddit={reddit} />
+
+          {/* Comments */}
+          <Comment gameId={id} />
         </div>
       </div>
     </div>

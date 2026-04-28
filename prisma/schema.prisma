@@ -23,34 +23,104 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   orders Order[]
+  wishlists Wishlist[]
+  comments Comment[]
+  gameStatuses GameStatus[]
+  commentLikes CommentLikes[]
 
   @@map("users")
 }
 
-model Game{
+enum Status {
+  Playing
+  Completed
+  OnHold
+  Dropped
+  PlanToPlay
+}
+
+
+model Wishlist{
   id String @id @default(uuid())
-  slug String @unique
-  name String
-  description String
-  released Boolean @default(false)
-  backgroundImage String
-  website String?
-  rating Float?
+  userId String 
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  gameId String
+  gameName String
+  gameImage String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  orders Order[]
 
-  @@map("games")
+  @@unique([userId, gameId])
+  @@index([userId, gameId])
+  @@map("wishlists")
+}
+
+model Comment{
+  id String @id @default(uuid())
+  userId String 
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  gameId String
+  comment String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  likes CommentLikes[]
+
+  @@map("comments")
+}
+
+model CommentLikes{
+  id String @id @default(uuid())
+  userId String 
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  commentId String
+  comment Comment @relation(fields: [commentId],references: [id],onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, commentId])
+  @@index([userId, commentId])
+  @@map("commentLikes")
 }
 
 model Order{
   id String @id @default(uuid())
   userId String 
   user User @relation(fields: [userId],references: [id],onDelete: Cascade)
-  games Game[]
+  orderItems OrderItem[]
+  totalAmount Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("orders")
 }
 
+model OrderItem{
+  id String @id @default(uuid())
+  orderId String
+  order Order @relation(fields: [orderId],references: [id],onDelete: Cascade)
+  gameId String
+  gameName String
+  gameImage String
+  gamePrice Float
+  gameQuantity Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("orderItems")
+}
+
+model GameStatus{
+  id String @id @default(uuid())
+  userId String 
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  gameId String
+  gameName String
+  gameImage String
+  status Status
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, gameId])
+  @@index([userId, gameId])
+  @@map("gameStatuses")
+}

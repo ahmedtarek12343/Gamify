@@ -16,9 +16,8 @@ import { Skeleton } from "../ui/skeleton";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Game } from "@/types";
-
+gsap.registerPlugin(SplitText);
 const HeroSection = () => {
-  gsap.registerPlugin(SplitText);
   const { data: popularGames, isLoading, isError } = useGetPopularGames();
   const router = useRouter();
 

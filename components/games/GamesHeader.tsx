@@ -17,11 +17,12 @@ import {
 import { useState } from "react";
 import ResponsiveSheet from "../utils/ResponsiveSheet";
 import { useCartStore } from "@/store/cart.store";
+import GamesCart from "./GamesCart";
+import { SheetTitle } from "../ui/sheet";
 
 const GamesHeader = () => {
   const { setSearch, search } = useGameFilterStore();
   const { cart, removeFromCart, addToCart, getTotalPrice } = useCartStore();
-  console.log(cart);
 
   const [open, setOpen] = useState(false);
 
@@ -56,36 +57,24 @@ const GamesHeader = () => {
           </Button>
 
           <ResponsiveSheet open={open} setOpen={setOpen}>
-            <div className="flex flex-col h-full bg-card">
-              <div className="p-6 border-b border-border">
-                <h2 className="text-lg font-semibold tracking-tight">
-                  Shopping Cart
-                </h2>
-              </div>
-              <div className="flex-1 flex flex-col items-center justify-center text-center text-muted-foreground p-6">
-                <div className="bg-muted p-4 rounded-full mb-4">
-                  <ShoppingCartIcon className="size-8 opacity-50" />
+            <div className="flex flex-col h-[85vh] sm:h-full bg-background border-none outline-none">
+              <div className="p-5 sm:p-6 border-b border-border/40 flex justify-between items-center bg-card/80 backdrop-blur-md sticky top-0 z-20">
+                <div className="flex items-center gap-2">
+                  <div className="bg-primary/20 p-2 rounded-lg">
+                    <ShoppingCartIcon className="h-5 w-5 text-primary" />
+                  </div>
+                  <SheetTitle className="text-lg font-bold tracking-tight">
+                    Shopping Cart
+                  </SheetTitle>
                 </div>
-                {cart.length === 0 ? (
-                  <>
-                    <p className="font-medium text-foreground">
-                      Your cart is empty
-                    </p>
-                    <p className="text-sm mt-1">
-                      Looks like you haven&apos;t added any games yet.
-                    </p>
-                    <Button
-                      className="mt-6"
-                      variant="outline"
-                      onClick={() => setOpen(false)}
-                    >
-                      Continue Browsing
-                    </Button>
-                  </>
-                ) : (
-                  <></>
+                {cart.length > 0 && (
+                  <span className="bg-primary text-primary-foreground text-xs px-2.5 py-1 rounded-full font-bold shadow-sm">
+                    {cart.reduce((acc, item) => acc + item.qty, 0)} Items
+                  </span>
                 )}
-                <p>Total: {getTotalPrice()}</p>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <GamesCart onClose={() => setOpen(false)} />
               </div>
             </div>
           </ResponsiveSheet>

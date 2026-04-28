@@ -1,7 +1,8 @@
+// next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  turbopack: {}, // ✅ silences the error, Turbopack handles watching better anyway
   images: {
     remotePatterns: [
       {

@@ -29,7 +29,7 @@ export const getGame = async (id: string) => {
   let trailers = movies;
   if (!movies.results?.length) {
     const ytRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(game.name + " official trailer")}&type=video&maxResults=3&key=${process.env.YOUTUBE_API_KEY}`,
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(game.name + " game official trailer")}&type=video&maxResults=3&key=${process.env.YOUTUBE_API_KEY}`,
     );
     const ytData = await ytRes.json();
     trailers = {

@@ -4,7 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import LazyImage from "../utils/LazyImage";
 import { useRouter } from "next/navigation";
-import { generatePrice } from "@/lib/utils";
+import { cn, generatePrice } from "@/lib/utils";
+import Image from "next/image";
+import Platforms from "@/constants";
 
 const GameCard = ({ game }: { game: Game }) => {
   const router = useRouter();
@@ -14,7 +16,7 @@ const GameCard = ({ game }: { game: Game }) => {
       onClick={() => {
         router.push(`/games/${game.id}`);
       }}
-      className="pt-0 snap-start shrink-0 basis-[300px] group overflow-hidden border bg-card text-card-foreground shadow-sm transition-all hover:shadow-md hover:border-primary/50 relative h-[360px] cursor-pointer"
+      className="pt-0 snap-start shrink-0 basis-[300px] group overflow-hidden border bg-card text-card-foreground shadow-sm transition-all hover:shadow-md hover:border-primary/50 relative h-[400px] cursor-pointer"
     >
       <div className="relative aspect-video w-full overflow-hidden bg-muted">
         {game.background_image ? (
@@ -55,9 +57,23 @@ const GameCard = ({ game }: { game: Game }) => {
             </Badge>
           ))}
         </div>
-
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
           <Badge>{new Date(game.released).getFullYear()}</Badge>
+        </div>
+        <div className="flex items-center gap-2 py-2">
+          {game.parent_platforms.map((platform) => (
+            <Image
+              key={platform.platform.id}
+              src={
+                Platforms.find((p) => p.name === platform.platform.slug)?.img ||
+                "/next.svg"
+              }
+              alt={platform.platform.name}
+              width={20}
+              height={20}
+              className="dark:invert"
+            />
+          ))}
         </div>
         <p className="text-lg font-semibold">
           {typeof generatePrice(new Date(game.released).getTime()) === "number"

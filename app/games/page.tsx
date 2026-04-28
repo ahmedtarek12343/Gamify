@@ -8,7 +8,7 @@ import GamesLoading from "@/components/loading/GamesLoading";
 import { useDebounce } from "use-debounce";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-
+import IntersectionLoader from "@/components/utils/IntersectionLoader";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -26,29 +26,26 @@ const GamesPage = () => {
   const {
     selectedPlatform,
     selectedTags,
-    setPage,
-    page,
-    search,
     selectedParentPlatform,
     selectedGenres,
+    ordering,
+    search,
     setSearch,
     setOrdering,
-    ordering,
   } = useGameFilterStore();
 
   const [debouncedSearch] = useDebounce(search, 500);
 
-  const { data, isLoading } = useGetGames(
-    debouncedSearch,
-    page,
-    selectedPlatform,
-    selectedTags,
-    selectedParentPlatform,
-    selectedGenres,
-    ordering,
-  );
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useGetGames(
+      debouncedSearch,
+      selectedPlatform,
+      selectedTags,
+      selectedParentPlatform,
+      selectedGenres,
+      ordering,
+    );
   console.log(data);
-
   const isMobile = useIsMobile();
 
   return (
@@ -114,10 +111,12 @@ const GamesPage = () => {
           >
             {isLoading ? (
               <GamesLoading />
-            ) : data?.results?.length === 0 ? (
+            ) : data?.pages?.flatMap((page: any) => page.results)?.length ===
+              0 ? (
               <p>No games found</p>
             ) : (
-              data?.results
+              data?.pages
+                ?.flatMap((page: any) => page.results)
                 ?.filter(
                   (game: Game) =>
                     !game?.tags?.some((tag: Tag) =>
@@ -126,27 +125,12 @@ const GamesPage = () => {
                 )
                 .map((game: Game) => <GameCard key={game.id} game={game} />)
             )}
-            {data?.results.length > 0 && (
-              <div className="flex justify-between items-center mt-4 col-span-full">
-                <Button
-                  disabled={page === 1}
-                  onClick={() => {
-                    setPage(page - 1);
-                  }}
-                >
-                  Previous
-                </Button>
-                <Button
-                  disabled={!data?.next}
-                  onClick={() => {
-                    setPage(page + 1);
-                  }}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
           </div>
+          <IntersectionLoader
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            fetchNextPage={fetchNextPage}
+          />
         </div>
       </div>
     </>

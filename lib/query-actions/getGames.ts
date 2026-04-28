@@ -1,7 +1,7 @@
 "use server";
 export const getGames = async (
   search?: string,
-  page: number = 1,
+  pageParam?: number,
   platforms?: string[],
   tags?: string[],
   parentPlatforms?: string,
@@ -10,7 +10,6 @@ export const getGames = async (
 ) => {
   const params = new URLSearchParams({
     key: process.env.RAWG_API_KEY!,
-    page: String(page),
   });
 
   if (search) params.append("search", search);
@@ -20,7 +19,9 @@ export const getGames = async (
   if (genres?.length) params.append("genres", genres.join(","));
   if (ordering) params.append("ordering", ordering);
 
-  const res = await fetch(`https://api.rawg.io/api/games?${params.toString()}`);
+  const res = await fetch(
+    `https://api.rawg.io/api/games?page=${pageParam ?? 1}&${params.toString()}`,
+  );
 
   if (!res.ok) throw new Error("Failed to fetch games");
 

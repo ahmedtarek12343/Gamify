@@ -2,13 +2,11 @@
 import { useGetParentPlatforms } from "@/hooks/games/useGetParentTags";
 import { Platform } from "@/types";
 import { Badge } from "../ui/badge";
-import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useGameFilterStore } from "@/store/game.store";
-import { Fragment } from "react/jsx-runtime";
 
 const PlatformShowCase = ({ id }: { id: string }) => {
   const { data, isLoading, isError } = useGetParentPlatforms();

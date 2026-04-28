@@ -1,37 +1,50 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getGames } from "@/lib/query-actions/getGames";
 
 export const useGetGames = (
   search?: string,
-  page: number = 1,
   platforms?: string[],
   tags?: string[],
   parentPlatforms?: string,
   genres?: string[],
   ordering?: string,
 ) => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: [
       "games",
-      search,
-      page,
-      platforms,
-      tags,
-      parentPlatforms,
-      genres,
-      ordering,
+      search ?? "",
+      platforms?.join(",") ?? "",
+      tags?.join(",") ?? "",
+      parentPlatforms ?? "",
+      genres?.join(",") ?? "",
+      ordering ?? "",
     ],
-    queryFn: () =>
+    queryFn: ({ pageParam = 1 }) =>
       getGames(
         search,
-        page,
+        pageParam,
         platforms,
         tags,
         parentPlatforms,
         genres,
         ordering,
       ),
+    getNextPageParam: (lastPage: any) => {
+      if (!lastPage.next) return undefined;
+
+      try {
+        const url = new URL(lastPage.next);
+        const page = url.searchParams.get("page");
+
+        if (!page) return undefined;
+
+        return Number(page);
+      } catch {
+        return undefined;
+      }
+    },
+    initialPageParam: 1,
   });
 };

@@ -6,8 +6,6 @@ import { Game } from "@/types";
 
 const TrendingGames = () => {
   const { data } = useGetTrendingGames();
-  console.log(data);
-
   return (
     <div className="py-10">
       <h1 className="text-2xl font-bold">Trending Games</h1>

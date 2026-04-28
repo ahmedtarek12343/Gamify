@@ -13,6 +13,7 @@ export interface Game {
   tags: Tag[];
   qty: number;
   dominant_color: string;
+  parent_platforms: { platform: Platform }[];
 }
 
 export interface Order {

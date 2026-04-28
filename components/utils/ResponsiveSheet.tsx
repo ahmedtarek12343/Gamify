@@ -1,24 +1,23 @@
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "../ui/drawer";
+import { Sheet, SheetContent } from "../ui/sheet";
+import { Drawer, DrawerContent } from "../ui/drawer";
 
 const ResponsiveSheet = ({
   open,
   setOpen,
   children,
+  className,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   children: React.ReactNode;
+  className?: string;
 }) => {
   const isMobile = useIsMobile();
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Responsive Modal</DrawerTitle>
-          </DrawerHeader>
+        <DrawerContent className={"h-[85vh] sm:h-full " + className}>
           {children}
         </DrawerContent>
       </Drawer>
@@ -26,10 +25,10 @@ const ResponsiveSheet = ({
   }
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Responsive Modal</SheetTitle>
-        </SheetHeader>
+      <SheetContent
+        side="right"
+        className={"w-[600px]! sm:max-w-none! " + className}
+      >
         {children}
       </SheetContent>
     </Sheet>

@@ -41,8 +41,8 @@ const FitersBar = () => {
   }
 
   return (
-    <div className="w-80 shrink-0 max-h-screen border-r border-border bg-card shadow-sm flex flex-col overflow-y-auto no-scrollbar">
-      <div className="flex h-14 items-center rounded-lg border-b border-border/50 p-6 backdrop-blur-sm bg-card/95">
+    <div className="w-80 shrink-0 h-[calc(100vh-4rem)] border-r border-border bg-card shadow-sm flex flex-col overflow-y-auto no-scrollbar sticky top-16">
+      <div className="flex h-14 items-center rounded-lg border-b border-border/50 p-6 bg-card sticky -top-1 z-10">
         <SlidersHorizontal className="mr-3 h-5 w-5 text-primary" />
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           Filters
