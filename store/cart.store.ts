@@ -40,7 +40,9 @@ export const useCartStore = create<CartStore>()(
         const { cart } = get();
         const totalPrice = cart.reduce((acc: number, game: Game) => {
           return (
-            acc + generatePrice(new Date(game.released).getTime()) * game.qty
+            acc +
+            (generatePrice(new Date(game.released).getTime()) as number) *
+              game.qty
           );
         }, 0);
         return totalPrice;

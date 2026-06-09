@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import LazyImage from "../utils/LazyImage";
 import { useRouter } from "next/navigation";
-import { cn, generatePrice } from "@/lib/utils";
+import { generatePrice } from "@/lib/utils";
 import Image from "next/image";
 import Platforms from "@/constants";
 
@@ -61,7 +61,7 @@ const GameCard = ({ game }: { game: Game }) => {
           <Badge>{new Date(game.released).getFullYear()}</Badge>
         </div>
         <div className="flex items-center gap-2 py-2">
-          {game.parent_platforms.map((platform) => (
+          {game.parent_platforms?.map((platform) => (
             <Image
               key={platform.platform.id}
               src={

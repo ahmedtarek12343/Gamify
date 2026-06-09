@@ -1,6 +1,6 @@
 "use client";
 import Image, { ImageProps } from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 
 const LazyImage = ({ ...props }: ImageProps) => {

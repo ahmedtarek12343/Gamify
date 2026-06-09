@@ -108,7 +108,7 @@ export const OrdersShowcase = () => {
                   key={item.id}
                   className="flex gap-5 items-center rounded-xl border bg-card/60 p-3 sm:p-4 transition-all hover:bg-card hover:scale-[1.02] hover:shadow-md cursor-pointer border-border/50 hover:border-primary/30"
                 >
-                  <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-lg border bg-muted shadow-sm">
+                  <div className="relative aspect-3/4 w-20 shrink-0 overflow-hidden rounded-lg border bg-muted shadow-sm">
                     {item.gameImage ? (
                       <Image
                         src={item.gameImage}

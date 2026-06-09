@@ -89,7 +89,7 @@ const StatusShowcase = () => {
                     </span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-t from-background/80 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
 
               <CardHeader className="p-4 relative h-[35%] flex flex-col justify-between border-t">

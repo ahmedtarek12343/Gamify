@@ -1,7 +1,6 @@
 "use client";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { useEffect } from "react";
-import GamesLoading from "../loading/GamesLoading";
 import { Loader2 } from "lucide-react";
 
 interface InfiniteScrollProps {

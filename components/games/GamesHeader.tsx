@@ -3,17 +3,8 @@
 import Link from "next/link";
 import { UserButton, Show, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { ThemeToggle } from "../utils/ThemeToggle";
-import { useGameFilterStore } from "@/store/game.store";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import Image from "next/image";
-import {
-  Search,
-  Gamepad2,
-  ShoppingCartIcon,
-  TrashIcon,
-  PlusIcon,
-} from "lucide-react";
+import { Gamepad2, ShoppingCartIcon } from "lucide-react";
 import { useState } from "react";
 import ResponsiveSheet from "../utils/ResponsiveSheet";
 import { useCartStore } from "@/store/cart.store";
@@ -21,8 +12,7 @@ import GamesCart from "./GamesCart";
 import { SheetTitle } from "../ui/sheet";
 
 const GamesHeader = () => {
-  const { setSearch, search } = useGameFilterStore();
-  const { cart, removeFromCart, addToCart, getTotalPrice } = useCartStore();
+  const { cart } = useCartStore();
 
   const [open, setOpen] = useState(false);
 
@@ -32,7 +22,7 @@ const GamesHeader = () => {
         {/* Logo Component */}
         <Link
           href="/"
-          className="flex flex-shrink-0 items-center gap-2 transition-transform hover:scale-105 active:scale-95"
+          className="flex shrink-0 items-center gap-2 transition-transform hover:scale-105 active:scale-95"
         >
           <div className="flex bg-primary/10 p-2 rounded-lg">
             <Gamepad2 className="h-6 w-6 text-primary" />

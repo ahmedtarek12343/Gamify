@@ -18,7 +18,7 @@ export const Comment = ({ gameId }: { gameId: string }) => {
   const { mutate: addComment, isPending } = useAddComment();
   const { data: comments, isLoading } = useGetComments(gameId);
   const { mutate: likeComment } = useLikeComment();
-  const { data: user, isLoading: userLoading } = useGetCurrentUser();
+  const { data: user } = useGetCurrentUser();
   const { mutate: deleteComment } = useDeleteComment();
 
   const handleSubmit = (e: React.FormEvent) => {
